@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+   
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="icon" href="src/img/flowers.png" type="image/x-icon">
+    <title>LUANA ❤</title>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <button id="music-toggle" class="music-btn" title="Reproducir música">🎵 Música</button>
+    <audio id="bg-music" loop preload="auto">
+        <source src="src/audio/Flores-Amarillas.mp3" type="audio/mpeg">
+    </audio>
+
+    <h1 class="title"><span id="typed-title"></span><span class="cursor"></span></h1>
+
+    <div class="greetings">
+        <span>L</span>
+        <span>U</span>
+        <span>A</span>
+        <span>N</span>
+        <span>A</span>
+        <span class="heart">❤</span>
+    </div>
+    <div class="description" id="message">
+        Tengo un regalo especial para ti!!
+    </div>
+    <div class="button">
+        <button><a href="src/index.html">Haga Clic</a></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Animación de entrada para las letras
+        document.addEventListener('DOMContentLoaded', () => {
+            const letters = document.querySelectorAll('.greetings > span');
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.style.opacity = '1';
+                    letter.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        // Efecto máquina de escribir para el título
+        const titleText = 'FELIZ DÍA DE LAS FLORES AMARILLAS';
+        const typedTitle = document.getElementById('typed-title');
+        let titleIndex = 0;
+
+        function typeTitle() {
+            if (titleIndex < titleText.length) {
+                typedTitle.textContent += titleText.charAt(titleIndex++);
+                setTimeout(typeTitle, 90);
+            }
+        }
+        typeTitle();
+
+        // Cambio de mensaje aleatorio
+        const messages = [
+            "Tengo un regalo especial para ti!!",
+            "¿Estás listo para una sorpresa?",
+            "Algo increíble te espera...",
+            "Prepárate para algo maravilloso",
+            "Una aventura está por comenzar"
+        ];
+
+        function changeMessage() {
+            const messageElement = document.getElementById('message');
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            messageElement.textContent = randomMessage;
+        }
+
+        setInterval(changeMessage, 4000); // Cambia el mensaje cada 5 segundos
+
+        // Control de la música de fondo
+        const musicBtn = document.getElementById('music-toggle');
+        const bgMusic = document.getElementById('bg-music');
+        bgMusic.volume = 0.8;
+
+        bgMusic.addEventListener('play', () => { musicBtn.textContent = '🔇 Pausar'; });
+        bgMusic.addEventListener('pause', () => { musicBtn.textContent = '🎵 Música'; });
+
+        // El botón pausa/reanuda manualmente
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userToggled = true;
+            if (bgMusic.paused) {
+                bgMusic.play().catch(() => {});
+            } else {
+                bgMusic.pause();
+            }
+        });
+
+        // La música arranca sola cuando sale el nombre. Si el navegador lo bloquea,
+        // empieza con el primer clic, toque o tecla en cualquier parte de la página.
+        let userToggled = false;
+        const startEvents = ['click', 'touchstart', 'keydown'];
+
+        function startMusic() {
+            if (userToggled || !bgMusic.paused) {
+                removeStartListeners();
+                return;
+            }
+            bgMusic.play().then(removeStartListeners).catch(() => {});
+        }
+
+        function removeStartListeners() {
+            startEvents.forEach(ev => document.removeEventListener(ev, startMusic));
+        }
+
+        startEvents.forEach(ev => document.addEventListener(ev, startMusic));
+        bgMusic.play().catch(() => {});
+
+        // Configuración de partículas para el fondo
+       particlesJS('particles-js', {
+    particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#ffcc00" }, // Color más brillante
+        shape: { type: "circle" },
+        opacity: {
+            value: 1, 
+            random: true, 
+            anim: {
+                enable: true,
+                speed: 1, // Velocidad del parpadeo más rápida
+                opacity_min: 0.3, // Opacidad mínima más alta
+                sync: false 
+            }
+        },
+        size: {
+            value: 3, 
+            random: true, 
+            anim: {
+                enable: true,
+                speed: 4, 
+                size_min: 0.5, // Tamaño mínimo ajustado
+                sync: false
+            }
+        },
+        line_linked: {
+            enable: true, 
+            distance: 150, 
+            color: "#ffffff", 
+            opacity: 0.3, // Opacidad de las líneas ajustada
+            width: 1 
+        },
+        move: {
+            enable: true, 
+            speed: 6, 
+            direction: "none", 
+            random: false, 
+            straight: false, 
+            out_mode: "out", 
+            bounce: false 
+        }
+    },
+    interactivity: {
+        detect_on: "canvas",
+        events: { 
+            onhover: { enable: true, mode: "repulse" }, 
+            onclick: { enable: true, mode: "push" }, 
+            resize: true 
+        },
+        modes: { 
+            repulse: { distance: 100, duration: 0.4 }, 
+            push: { particles_nb: 4 } 
+        }
+    },
+    retina_detect: true
+});
+
+
+    </script>
+</body>
+</html>
